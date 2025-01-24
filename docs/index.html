@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trukers! Card Drawer</title>
+<style>
+  body { font-family: Arial, sans-serif; display: flex; flex-direction: column; justify-content: space-between; height: 100vh; margin: 0; font-size: xx-large;}
+  #cardInfo { 
+    display: flex; 
+    margin: 20px; 
+    height: 70vh; /* Fixed height for card info */
+    background-color: #f0f0f0; 
+    border-radius: 8px; 
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
+    overflow: hidden; /* Ensures the content fits within the designated area */
+  }
+  #cardInfo.empty { 
+    justify-content: center; 
+    align-items: center; 
+    color: #999; 
+  }
+  .cardDetails { 
+    flex: 1; 
+    font-weight: bold; 
+    padding: 20px; 
+    overflow-y: auto; /* Allows scrolling for overflow content */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: right;
+  }
+  .cardImage { 
+    flex: 1; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    overflow: hidden;
+  }
+  img { max-height: 100%; border-radius: 8px; }
+  button { 
+    padding: 15px 30px; /* Bigger button size */
+    border: none; 
+    border-radius: 5px; 
+    background-color: orange; /* Orange button color */
+    color: white; 
+    cursor: pointer; 
+    font-size: 1.2em; /* Larger font size for better visibility */
+    margin: 10px auto; 
+    display: block; 
+    transition: background-color 0.3s ease;
+    margin-bottom: 10vh;
+  }
+  button:hover { 
+    background-color: darkorange;
+  }
+  .Event { background-color: #ff6666; }
+.Choice { background-color: #A6E4C1; }
+</style>
+</head>
+<body>
+
+<div id="cardInfo" class="empty">No card selected yet</div>
+<button id="getCard">Get Card</button>
+<script>
+// Simulated array of cards with directory (type), and name
+
+const cards = [
+  { dir: "assets/choices", name: "Bear trap.png", type: "Choice" },
+  { dir: "assets/choices", name: "Flood Warning.png", type: "Choice" },
+  { dir: "assets/choices", name: "Local Festival.png", type: "Choice" },
+  { dir: "assets/choices", name: "Loose Load.png", type: "Choice" },
+  { dir: "assets/choices", name: "Maintenance.png", type: "Choice" },
+  { dir: "assets/choices", name: "Maintenance.png", type: "Choice" },
+  { dir: "assets/choices", name: "Mechanical Marvel.png", type: "Choice" },
+  { dir: "assets/choices", name: "Shortcut.png", type: "Choice" },
+  { dir: "assets/choices", name: "Tornado watch.png", type: "Choice" },
+  { dir: "assets/choices", name: "Trucker's Luck.png", type: "Choice" },
+  { dir: "assets/events", name: "Alligator.png", type: "Event" },
+  { dir: "assets/events", name: "Alligator.png", type: "Event" },
+  { dir: "assets/events", name: "Brake Failure.png", type: "Event" },
+  { dir: "assets/events", name: "CB rambo.png", type: "Event" },
+  { dir: "assets/events", name: "Call from home.png", type: "Event" },
+  { dir: "assets/events", name: "Call from home.png", type: "Event" },
+  { dir: "assets/events", name: "Cheese wagon.png", type: "Event" },
+  { dir: "assets/events", name: "Chicken Coop inspection.png", type: "Event" },
+  { dir: "assets/events", name: "Chicken Coop inspection.png", type: "Event" },
+  { dir: "assets/events", name: "Drunk Driver.png", type: "Event" },
+  { dir: "assets/events", name: "Heavy Traffic.png", type: "Event" },
+  { dir: "assets/events", name: "Labor Laws.png", type: "Event" },
+  { dir: "assets/events", name: "Malfunction.png", type: "Event" },
+  { dir: "assets/events", name: "Pickle Park.png", type: "Event" },
+  { dir: "assets/events", name: "Steep Grade Ahead.png", type: "Event" },
+  { dir: "assets/events", name: "Steep Grade Ahead.png", type: "Event" },
+  { dir: "assets/events", name: "Sudden Malfunction.png", type: "Event" },
+  { dir: "assets/events", name: "Sunny Day.png", type: "Event" },
+  { dir: "assets/events", name: "Sunny Day.png", type: "Event" },
+  { dir: "assets/events", name: "Sunny Day.png", type: "Event" },
+  { dir: "assets/events", name: "Toll Booth Blunder.png", type: "Event" },
+  { dir: "assets/events", name: "Traffic.png", type: "Event" },
+  { dir: "assets/events", name: "Traffic.png", type: "Event" },
+  { dir: "assets/events", name: "Traffic.png", type: "Event" },
+  { dir: "assets/events", name: "Traffic.png", type: "Event" },
+  { dir: "assets/events", name: "Unexpected Detour.png", type: "Event" },
+  { dir: "assets/events", name: "Unexpected Detour.png", type: "Event" },
+  { dir: "assets/events", name: "Wildlife crossing.png", type: "Event" },
+  { dir: "assets/events", name: "Wildlife crossing.png", type: "Event" },
+  { dir: "assets/events", name: "collision.png", type: "Event" },
+  { dir: "assets/events", name: "collision.png", type: "Event" },
+  { dir: "assets/events", name: "icy road.png", type: "Event" },
+  { dir: "assets/events", name: "mountain pass.png", type: "Event" },
+  { dir: "assets/events", name: "sudden storm.png", type: "Event" },
+  { dir: "assets/events", name: "sudden storm.png", type: "Event" },
+  { dir: "assets/events", name: "windstorm.png", type: "Event" },
+  { dir: "assets/events", name: "“Coffee”.png", type: "Event" },
+  { dir: "assets/events", name: "“Coffee”.png", type: "Event" },
+  { dir: "assets/events", name: "“Coffee”.png", type: "Event" }
+];
+const capitalizeWords = str => str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+
+function getRandomCard() {
+  // Generate a random index based on the array's length
+  const index = Math.floor(Math.random() * cards.length);
+  const card = cards[index];
+  const cardName = capitalizeWords(card.name.replace(/\..+$/, '')).replace(/-\d+$/, ''); // Remove file extension and capitalize
+  const cardType = capitalizeWords(card.type);
+  
+  // Display the card information
+
+  document.getElementById('cardInfo').innerHTML = `
+    <div class="cardDetails">
+      <div class="${cardType}">${cardType}</div>
+      <div>${cardName}</div>
+    </div>
+    <div class="cardImage">
+      <img src="./${card.dir}/${card.name}" alt="${card.name}">
+    </div>
+  `;
+  document.getElementById('cardInfo').classList.remove('empty');
+}
+
+document.getElementById('getCard').addEventListener('click', getRandomCard);
+document.getElementById('cardInfo').classList.add('empty'); // Ensure the class is added back if no card is selected
+
+</script>
+
+</body>
+</html>
