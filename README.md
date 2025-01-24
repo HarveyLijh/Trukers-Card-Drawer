@@ -10,17 +10,10 @@ Welcome to the Trukers! Card Drawer project. This is an interactive HTML game wh
 
 ## Project Structure
 
-- `docs/`: Contains the main content for the GitHub page.
-  - `index.html`: The main HTML file for the game.
+- `index.html`: The main HTML file for the game.
 - `assets/`: Contains the images for the cards.
   - `choices/`: Images for choice cards.
   - `events/`: Images for event cards.
-- `.github/workflows/`: Contains the GitHub Actions workflow for deploying to GitHub Pages.
-  - `deploy.yml`: The workflow file for deployment.
-
-## Custom Domain
-
-If you want to use a custom domain for your GitHub Pages site, add your domain name to the `CNAME` file in the `docs/` directory.
 
 ## License
 
